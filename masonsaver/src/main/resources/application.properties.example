@@ -1,0 +1,11 @@
+# Copy this file to application.properties and fill in your local values
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/masonsaver
+spring.datasource.username=postgres
+spring.datasource.password=YOUR_PASSWORD_HERE
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+server.port=8080

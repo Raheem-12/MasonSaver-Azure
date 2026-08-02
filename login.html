@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MasonSaver — Sign In</title>
+
+  <!-- Google Fonts: Playfair Display for the logo, DM Sans for all body/UI text -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Reset: remove default browser margin, padding, and box model inconsistencies */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /*
+     * CSS Variables — Design tokens for the entire page.
+     * Change these values here to retheme the whole page at once.
+     * Colors are based on George Mason University branding.
+     */
+    :root {
+      --green-dark: #1e4d2b;   /* Primary color: buttons, focus rings */
+      --green-mid:  #2a6639;   /* Button hover state */
+      --gold:       #c8a44a;   /* Accent color: logo, secondary button border */
+      --gold-hover: #b08f38;   /* Darker gold for text on gold backgrounds */
+
+      --text-main:  #1a1a1a;   /* Main readable text (inputs) */
+      --text-muted: #777;      /* Labels and secondary text */
+      --text-hint:  #aaa;      /* Placeholder and hint text */
+
+      --border:     #ddddd5;   /* Input and card borders */
+      --bg-page:    #f2f2ec;   /* Page background */
+      --bg-card:    #ffffff;   /* Card/form background */
+      --bg-input:   #fafaf8;   /* Input field background */
+      --error:      #b83232;   /* Validation error text color */
+    }
+
+    /*
+     * Body: centers the card both vertically and horizontally.
+     * min-height: 100vh ensures it fills the full screen even on short content.
+     */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg-page);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    /*
+     * .card: the main white form container.
+     * max-width keeps it from stretching too wide on large screens.
+     * The fadeUp animation plays once on page load for a polished entrance.
+     */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.75rem 2.25rem;
+      width: 100%;
+      max-width: 420px;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    /* Entrance animation: card slides up 16px and fades in over 0.4 seconds */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* .logo: "MasonSaver" branding at the top of the card in serif font */
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--green-dark);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+
+    /* The <span> inside .logo colors the word "Saver" in gold */
+    .logo span { color: var(--gold); }
+
+    /* .tagline: small subtitle text below the logo */
+    .tagline {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    /* .mason-badge: pill-shaped label reading "George Mason University" */
+    .mason-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--gold-hover);
+      background: #fdf8ee;
+      border: 1px solid #e8d9a8;
+      border-radius: 20px;
+      padding: 3px 10px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.3px;
+    }
+
+    /* Shared label styles for all form fields */
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      margin-top: 1.1rem;
+    }
+
+    /* Shared styles for all text, email, and password input fields */
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-input);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    /* Focus state: green border + soft glow ring to indicate active field */
+    input:focus {
+      border-color: var(--green-dark);
+      box-shadow: 0 0 0 3px rgba(30, 77, 43, 0.1);
+    }
+
+    /*
+     * .pw-wrap: a relative-positioned wrapper around the password input.
+     * Required so the show/hide toggle button can be absolutely
+     * positioned inside the right edge of the input field.
+     */
+    .pw-wrap { position: relative; }
+    .pw-wrap input { padding-right: 42px; }
+
+    /*
+     * .pw-toggle: the eye icon button inside the password field.
+     * Absolutely positioned to sit flush with the right edge of the input.
+     */
+    .pw-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-hint);
+      font-size: 18px;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.15s;
+    }
+
+    .pw-toggle:hover { color: var(--green-dark); }
+
+    /* .forgot: small "Forgot password?" link aligned to the right */
+    .forgot {
+      display: block;
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-hint);
+      text-decoration: none;
+      margin-top: 5px;
+      transition: color 0.15s;
+    }
+
+    .forgot:hover { color: var(--green-dark); }
+
+    /* .btn-signin: the primary "Sign in" submit button */
+    .btn-signin {
+      width: 100%;
+      margin-top: 1.6rem;
+      padding: 12px;
+      background-color: var(--green-dark);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background-color 0.15s, transform 0.1s;
+    }
+
+    .btn-signin:hover  { background-color: var(--green-mid); }
+    .btn-signin:active { transform: scale(0.98); }
+
+    /* .divider: horizontal separator between form and create account link */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 1.4rem 0;
+    }
+
+    .divider-line { flex: 1; height: 1px; background: var(--border); }
+    .divider-text { font-size: 12px; color: var(--text-hint); }
+
+    /* .btn-signup: secondary "Create an account" link styled as outlined button */
+    .btn-signup {
+      display: block;
+      width: 100%;
+      padding: 11px;
+      background: none;
+      border: 1.5px solid var(--gold);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--gold-hover);
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color 0.15s;
+    }
+
+    .btn-signup:hover { background-color: #fdf8ee; }
+
+    /*
+     * .error-msg: validation error text.
+     * Hidden by default, shown when validation fails or backend returns an error.
+     */
+    .error-msg {
+      font-size: 13px;
+      color: var(--error);
+      margin-top: 0.75rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main card container -->
+  <div class="card">
+
+    <!-- Logo: "Mason" in green, "Saver" in gold -->
+    <p class="logo">Mason<span>Saver</span></p>
+
+    <!-- Subtitle -->
+    <p class="tagline">Find the best textbook prices at GMU</p>
+
+    <!-- GMU branding badge -->
+    <span class="mason-badge">George Mason University</span>
+
+    <!--
+      Login form.
+      novalidate disables browser built-in popups so we show our own errors.
+    -->
+    <form id="loginForm" novalidate>
+
+      <!-- Email field -->
+      <label for="email">Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+
+      <!-- Password field with show/hide toggle -->
+      <label for="password">Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+        <button type="button" class="pw-toggle" id="pwToggle" aria-label="Toggle password visibility">👁</button>
+      </div>
+
+      <!-- Forgot password link -->
+      <a href="forgot-password.html" class="forgot">Forgot password?</a>
+
+      <!-- Error message: hidden until validation fails or backend returns an error -->
+      <p class="error-msg" id="errorMsg">Please fill in all fields.</p>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-signin">Sign in</button>
+
+    </form>
+
+    <!-- Divider -->
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span class="divider-text">new here?</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- Link to signup page -->
+    <a href="signup.html" class="btn-signup">Create an account</a>
+
+  </div>
+
+  <script>
+    /*
+     * Password show/hide toggle
+     * Switches the password input between visible and hidden on button click.
+     */
+    const pwToggle      = document.getElementById('pwToggle');
+    const passwordInput = document.getElementById('password');
+
+    pwToggle.addEventListener('click', () => {
+      const isHidden       = passwordInput.type === 'password';
+      passwordInput.type   = isHidden ? 'text' : 'password';
+      pwToggle.textContent = isHidden ? '🙈' : '👁';
+    });
+
+    /**
+     * Form submit handler
+     *
+     * Validates fields then sends a POST request to the
+     * SpringBoot backend to verify the user's credentials.
+     *
+     * Validation:
+     *   1. Both email and password must be filled in
+     *
+     * On success: redirects to dashboard.html
+     * On failure: shows error message from backend
+     */
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+
+      /* Check: both fields must be filled in */
+      if (!email || !password) {
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      /* All checks passed — send to SpringBoot backend */
+      fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+      })
+      .then(res => res.text())
+      .then(msg => {
+        if (msg === 'Login successful') {
+          /* Login worked — send user to dashboard */
+          window.location.href = 'dashboard.html';
+        } else {
+          /* Backend returned an error (e.g. wrong password) */
+          errorMsg.textContent   = msg;
+          errorMsg.style.display = 'block';
+        }
+      })
+      .catch(err => {
+        /* Network error or backend is not running */
+        errorMsg.textContent   = 'Something went wrong. Please try again.';
+        errorMsg.style.display = 'block';
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+HELP.md
+
+# Maven / Java build output
+target/
+*.class
+
+# Keep source folders even if they contain folders named target or build
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Local secrets and environment variables
+.env
+.env.*
+!.env.example
+
+# Spring local configuration containing credentials
+src/main/resources/application.properties
+**/src/main/resources/application.properties
+
+# Logs
+*.log
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Operating system files ###
+Thumbs.db
+.DS_Store
