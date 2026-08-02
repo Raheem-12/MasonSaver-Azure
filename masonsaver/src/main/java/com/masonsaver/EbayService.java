@@ -23,15 +23,19 @@ import java.util.Base64;
 public class EbayService {
 
     private static final String CLIENT_ID =
-        System.getenv("EBAY_CLIENT_ID");
+            System.getenv("EBAY_CLIENT_ID");
 
     private static final String CLIENT_SECRET =
-        System.getenv("EBAY_CLIENT_SECRET");
+            System.getenv("EBAY_CLIENT_SECRET");
 
-    if (CLIENT_ID == null || CLIENT_SECRET == null) {
-        throw new IllegalStateException(
-        "EBAY_CLIENT_ID and EBAY_CLIENT_SECRET environment variables must be set."
-     );
+    static {
+        if (CLIENT_ID == null || CLIENT_ID.isBlank()
+                || CLIENT_SECRET == null || CLIENT_SECRET.isBlank()) {
+
+            throw new IllegalStateException(
+                    "EBAY_CLIENT_ID and EBAY_CLIENT_SECRET environment variables must be set."
+            );
+        }
     }
 
     private String accessToken = "";
