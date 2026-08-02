@@ -21,7 +21,6 @@ import java.util.Base64;
  * The access token is cached and reused until it expires.
  */
 public class EbayService {
-
     private static final String CLIENT_ID =
             System.getenv("EBAY_CLIENT_ID");
 
