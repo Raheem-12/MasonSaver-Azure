@@ -253,6 +253,149 @@
       color: var(--text-hint);
     }
 
+        /* -------------------------
+     * SEARCH RESULTS
+     * Styles for results returned by the Spring Boot API.
+     * ------------------------- */
+    .results-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .results-label {
+      margin-bottom: 4px;
+      color: var(--gold-hover);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .results-header h2 {
+      color: var(--green-dark);
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+    }
+
+    .results-header span {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .results-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .result-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-card);
+      box-shadow: 0 3px 14px rgba(0, 0, 0, 0.05);
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 22px rgba(0, 0, 0, 0.08);
+    }
+
+    .result-seller {
+      margin-bottom: 5px;
+      color: var(--gold-hover);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .result-title {
+      color: var(--green-dark);
+      font-family: 'Playfair Display', serif;
+      font-size: 19px;
+    }
+
+    .result-condition {
+      margin-top: 6px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .result-actions {
+      display: flex;
+      align-items: flex-end;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .result-price {
+      color: var(--green-dark);
+      font-size: 21px;
+    }
+
+    .btn-view {
+      padding: 8px 14px;
+      border-radius: 7px;
+      color: #ffffff;
+      background: var(--green-dark);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-view:hover {
+      background: var(--green-mid);
+    }
+
+    .demo-notice {
+      margin-top: 18px;
+      color: var(--text-hint);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .btn-search:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    @media (max-width: 600px) {
+      .search-row {
+        flex-direction: column;
+      }
+
+      .btn-search {
+        width: 100%;
+      }
+
+      .results-header,
+      .result-card {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .result-actions {
+        align-items: stretch;
+      }
+
+      .btn-view {
+        text-align: center;
+      }
+    }
+    
     /* -------------------------
      * FOOTER
      * Simple footer at the bottom of the page.
@@ -271,7 +414,7 @@
 
   <!-- Navbar: sticky top bar with logo and sign out -->
   <nav class="navbar">
-    <a href="dashboard.html" class="navbar-logo">Mason<span>Saver</span></a>
+    <a href="index.html" class="navbar-logo">Mason<span>Saver</span></a>
     <div class="navbar-right">
 
   <a href="index.html" class="btn-signout">
@@ -340,28 +483,132 @@
 
   <script>
     /**
-     * handleSearch()
-     *
-     * Fires when the user clicks the Search button.
-     * Reads the search input value and validates it is not empty.
-     * Results functionality will be wired up to the SpringBoot backend
-     * in a future sprint once the textbook search endpoint is built.
-     *
-     * TODO: replace the console.log with a fetch() call to the backend
-     * e.g. fetch(`/api/textbooks/search?query=${encodeURIComponent(query)}`)
+     * Sends the user's textbook query to the deployed Spring Boot API.
+     * The returned JSON listings are rendered dynamically below the
+     * search form.
      */
-    function handleSearch() {
-      const query = document.getElementById('searchInput').value.trim();
+    async function handleSearch() {
+    const query = document.getElementById('searchInput').value.trim();
+    const resultsArea = document.getElementById('resultsArea');
+    const searchButton = document.getElementById('searchBtn');
 
-      /* Do nothing if the search box is empty */
-      if (!query) {
-        document.getElementById('searchInput').focus();
-        return;
+    if (!query) {
+      document.getElementById('searchInput').focus();
+      return;
+    }
+
+    searchButton.disabled = true;
+    searchButton.textContent = 'Searching...';
+
+    resultsArea.innerHTML = `
+      <div class="empty-state">
+        <p class="empty-state-title">Searching for textbooks...</p>
+        <p class="empty-state-text">
+        Comparing available options for "${escapeHtml(query)}"
+        </p>
+      </div>
+    `;
+
+    try {
+      const endpoint =
+        'https://masonsaver-backend-raheem-eqctbph9bycpfhf8.eastus2-01.azurewebsites.net' +
+        '/api/textbooks/search?query=' +
+        encodeURIComponent(query);
+
+      const response = await fetch(endpoint);
+
+      if (!response.ok) {
+        throw new Error('The textbook search request failed.');
       }
 
-      /* TODO: send query to SpringBoot search endpoint and display results */
-      console.log('Searching for:', query);
+      const results = await response.json();
+
+      displayResults(results, query);
+    } catch (error) {
+      resultsArea.innerHTML = `
+        <div class="empty-state">
+          <p class="empty-state-title">Search unavailable</p>
+          <p class="empty-state-text">
+            ${escapeHtml(error.message)}
+          </p>
+        </div>
+      `;
+    } finally {
+      searchButton.disabled = false;
+      searchButton.textContent = 'Search';
     }
+  }
+
+  function displayResults(results, query) {
+  const resultsArea = document.getElementById('resultsArea');
+
+  if (!results.length) {
+    resultsArea.innerHTML = `
+      <div class="empty-state">
+        <p class="empty-state-title">No results found</p>
+        <p class="empty-state-text">
+          Try another title, course number, or ISBN.
+        </p>
+      </div>
+    `;
+    return;
+  }
+
+  const resultCards = results.map(result => `
+    <article class="result-card">
+      <div>
+        <p class="result-seller">${escapeHtml(result.seller)}</p>
+        <h2 class="result-title">${escapeHtml(result.title)}</h2>
+        <p class="result-condition">
+          Condition: ${escapeHtml(result.condition)}
+        </p>
+      </div>
+
+      <div class="result-actions">
+        <strong class="result-price">
+          $${Number(result.price).toFixed(2)}
+        </strong>
+
+        <a
+          href="${result.url}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-view"
+        >
+          View listing
+        </a>
+      </div>
+    </article>
+  `).join('');
+
+  resultsArea.innerHTML = `
+    <section class="results-header">
+      <div>
+        <p class="results-label">Search results</p>
+        <h2>Results for “${escapeHtml(query)}”</h2>
+      </div>
+
+      <span>${results.length} options found</span>
+    </section>
+
+    <div class="results-list">
+      ${resultCards}
+    </div>
+
+    <p class="demo-notice">
+      Demonstration prices shown. Live marketplace integration is planned.
+    </p>
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
 
     /*
      * Allow pressing Enter in the search input to trigger the search,
