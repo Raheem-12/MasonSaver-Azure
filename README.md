@@ -29,6 +29,8 @@ Expected response:
 
 ## Application
 
+### User Interface
+
 <table>
 <tr>
 <td align="center">
@@ -59,14 +61,29 @@ Expected response:
 <tr><td height="25"></td></tr>
 
 <tr>
-<td align="center">
+<td align="center" colspan="2">
 <b>Dashboard</b><br><br>
 <img src="https://github.com/user-attachments/assets/c79ee436-4d5c-4b86-a69f-6b07f311d49c" width="430">
 </td>
+</tr>
+</table>
 
+**Note:** The textbook search page currently displays sample pricing data. Live results will be available after eBay Browse API access is approved.
+
+---
+
+### Cloud Deployment
+
+<table>
+<tr>
 <td align="center">
 <b>Frontend Deployment Pipeline</b><br><br>
 <img src="https://github.com/user-attachments/assets/2830137f-c449-4086-a87c-cfb9c288df3f" width="430">
+</td>
+
+<td align="center">
+<b>Backend Deployment Pipeline</b><br><br>
+<img src="https://github.com/user-attachments/assets/2d97e951-cb13-4855-a90a-ae9961b5823b" width="430">
 </td>
 </tr>
 
@@ -74,8 +91,8 @@ Expected response:
 
 <tr>
 <td align="center">
-<b>Backend Deployment Pipeline</b><br><br>
-<img src="https://github.com/user-attachments/assets/2d97e951-cb13-4855-a90a-ae9961b5823b" width="430">
+<b>Azure Static Web App</b><br><br>
+<img src="https://github.com/user-attachments/assets/b3572ade-449c-443b-ac14-cb1aad6f2959" width="430">
 </td>
 
 <td align="center">
@@ -83,17 +100,7 @@ Expected response:
 <img src="https://github.com/user-attachments/assets/278c3b39-6335-4395-a42f-67a5288044c0" width="430">
 </td>
 </tr>
-
-<tr><td height="25"></td></tr>
-
-<tr>
-<td align="center" colspan="2">
-<b>Azure Static Web App</b><br><br>
-<img src="https://github.com/user-attachments/assets/b3572ade-449c-443b-ac14-cb1aad6f2959" width="430">
-</td>
-</tr>
 </table>
-
 **Note:** The textbook search page currently displays sample pricing data. Live results will be available after eBay Browse API access is approved.
 
 ---
