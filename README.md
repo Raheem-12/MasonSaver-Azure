@@ -101,7 +101,6 @@ Expected response:
 </td>
 </tr>
 </table>
-**Note:** The textbook search page currently displays sample pricing data. Live results will be available after eBay Browse API access is approved.
 
 ---
 
