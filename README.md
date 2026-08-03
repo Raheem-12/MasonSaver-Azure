@@ -1,17 +1,14 @@
 # MasonSaver
 
+A cloud-deployed full-stack textbook price comparison platform built with Spring Boot, PostgreSQL, and Microsoft Azure.
 A full-stack textbook price comparison application built with Java Spring Boot, PostgreSQL, and Microsoft Azure.
 
+MasonSaver helps George Mason University students compare textbook prices before purchasing. The project includes user authentication, a Spring Boot REST API, a PostgreSQL database, Azure deployment, and GitHub Actions CI/CD.
 MasonSaver helps George Mason University students compare textbook prices before purchasing. The application includes secure user authentication, a REST API, a PostgreSQL database, Azure cloud deployment, and automated CI/CD using GitHub Actions.
 
 ---
 
-## Live Demo
-
-### Frontend
-
-https://nice-sky-082512f0f.7.azurestaticapps.net
-
+@@ -15,3 +15,219 @@ https://nice-sky-082512f0f.7.azurestaticapps.net
 ### Backend API
 
 https://masonsaver-backend-raheem-eqctbph9bycpfhf8.eastus2-01.azurewebsites.net/api/health
@@ -27,20 +24,18 @@ Expected response:
 
 ---
 
----
-
-# Application
+## Application
 
 <table>
 <tr>
 <td align="center">
 <b>Landing Page</b><br><br>
-<img src="LANDING_PAGE_IMAGE" width="430">
+<img src="https://github.com/user-attachments/assets/587f665d-1014-408e-9973-087cca3a1787" width="430">
 </td>
 
 <td align="center">
 <b>Create Account</b><br><br>
-<img src="CREATE_ACCOUNT_IMAGE" width="430">
+<img src="https://github.com/user-attachments/assets/08ad2f75-b4ea-4ff4-ba97-f5deca58cc30" width="430">
 </td>
 </tr>
 
@@ -49,67 +44,29 @@ Expected response:
 <tr>
 <td align="center">
 <b>Login</b><br><br>
-<img src="LOGIN_IMAGE" width="430">
+<img src="https://github.com/user-attachments/assets/9e2e1df9-c975-4568-b97c-7bbaf7f13c61" width="430">
 </td>
 
 <td align="center">
 <b>Textbook Search (Demo)</b><br><br>
-<img src="TEXTBOOK_SEARCH_IMAGE" width="430">
+<img src="https://github.com/user-attachments/assets/2daa3a84-3e99-413d-b130-150ecf98083e" width="430">
 </td>
 </tr>
 
 <tr><td height="25"></td></tr>
 
 <tr>
-<td align="center" colspan="2">
-<b>Student Dashboard</b><br><br>
-<img src="DASHBOARD_IMAGE" width="860">
+<td align="center">
+<b>Dashboard</b><br><br>
+<img src="https://github.com/user-attachments/assets/c79ee436-4d5c-4b86-a69f-6b07f311d49c" width="430">
+</td>
+
+<td align="center">
+<b>GitHub Actions CI/CD</b><br><br>
+<img src="https://github.com/user-attachments/assets/40d52e2f-720e-4c4a-b6f7-f7c9dd889233" width="430">
 </td>
 </tr>
 </table>
-
-> **Note:** Textbook search currently displays demo pricing. Live textbook listings will be powered by the eBay Browse API once API access is approved.
-
----
-
-# Cloud Deployment
-
-<table>
-<tr>
-<td align="center">
-<b>Azure Static Web App</b><br><br>
-<img src="AZURE_STATIC_WEB_APP_IMAGE" width="430">
-</td>
-
-<td align="center">
-<b>Azure App Service</b><br><br>
-<img src="AZURE_APP_SERVICE_IMAGE" width="430">
-</td>
-</tr>
-</table>
-
-The frontend is hosted using **Azure Static Web Apps**, while the Java Spring Boot backend is deployed to **Azure App Service**.
-
----
-
-# Continuous Integration / Continuous Deployment
-
-<table>
-<tr>
-<td align="center">
-<b>Frontend Deployment Pipeline</b><br><br>
-<img src="https://github.com/user-attachments/assets/2830137f-c449-4086-a87c-cfb9c288df3f" width="430">
-</td>
-
-<td align="center">
-<b>Backend Deployment Pipeline</b><br><br>
-<img src="https://github.com/user-attachments/assets/2d97e951-cb13-4855-a90a-ae9961b5823b" width="430">
-</td>
-</tr>
-</table>
-Every push to the **main** branch automatically triggers GitHub Actions workflows that build and deploy the frontend and backend to Microsoft Azure.
-
----
 
 **Note:** The textbook search page currently displays sample pricing data. Live results will be added after eBay Browse API access is approved.
 
