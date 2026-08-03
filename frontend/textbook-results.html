@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MasonSaver — Computer Networks</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-dark:  #1e4d2b;
+      --green-mid:   #2a6639;
+      --green-light: #eef4f0;
+      --gold:        #c8a44a;
+      --gold-hover:  #b08f38;
+      --gold-light:  #fdf8ee;
+
+      --text-main:   #1a1a1a;
+      --text-muted:  #666;
+      --text-hint:   #aaa;
+
+      --border:      #e0e0d8;
+      --bg-page:     #f2f2ec;
+      --bg-card:     #ffffff;
+      --bg-input:    #fafaf8;
+
+      --amazon:      #ff9900;
+      --chegg:       #e8281c;
+      --gmu:         #1e4d2b;
+
+      --shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
+      --shadow-md:   0 4px 20px rgba(0,0,0,0.08);
+      --shadow-lg:   0 8px 40px rgba(0,0,0,0.10);
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: var(--green-dark);
+      height: 60px;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+
+    .navbar-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .navbar-logo span { color: var(--gold); }
+
+    .navbar-search {
+      flex: 1;
+      max-width: 480px;
+      margin: 0 2rem;
+      display: flex;
+      gap: 8px;
+    }
+
+    .navbar-search input {
+      flex: 1;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      outline: none;
+      transition: background 0.15s;
+    }
+
+    .navbar-search input::placeholder { color: rgba(255,255,255,0.5); }
+    .navbar-search input:focus { background: rgba(255,255,255,0.22); }
+
+    .navbar-search button {
+      padding: 8px 16px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .navbar-search button:hover { background: var(--gold-hover); }
+
+    .btn-signout {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      padding: 6px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-signout:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    /* ── PAGE WRAPPER ── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* ── BOOK HEADER ── */
+    .book-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: flex-start;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Book cover placeholder */
+    .book-cover {
+      width: 80px;
+      height: 104px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 28px;
+      box-shadow: 3px 3px 12px rgba(0,0,0,0.15);
+    }
+
+    .book-info { flex: 1; }
+
+    .book-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--green-dark);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .book-author {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .book-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      border: 1px solid #c8ddd0;
+    }
+
+    .badge-gold {
+      background: var(--gold-light);
+      color: var(--gold-hover);
+      border-color: #e8d9a8;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 5px;
+      box-shadow: var(--shadow-sm);
+      animation: fadeUp 0.4s ease 0.05s both;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 7px;
+      background: none;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+
+    .tab:hover { background: var(--green-light); color: var(--green-dark); }
+
+    .tab.active {
+      background: var(--green-dark);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(30,77,43,0.25);
+    }
+
+    /* ── TAB PANELS ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeUp 0.3s ease both; }
+
+    /* ── SECTION CARD ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    /* ── PRICE TABLE ── */
+    .price-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .price-table thead tr {
+      border-bottom: 2px solid var(--border);
+    }
+
+    .price-table th {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-hint);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    .price-table th:last-child { text-align: right; }
+
+    .price-table td {
+      padding: 14px 12px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    .price-table tbody tr:last-child td { border-bottom: none; }
+
+    .price-table tbody tr {
+      transition: background 0.1s;
+    }
+
+    .price-table tbody tr:hover { background: var(--bg-page); }
+
+    /* Source logo pill */
+    .source-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 500;
+    }
+
+    .source-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-amazon  { background: var(--amazon); }
+    .dot-chegg   { background: var(--chegg); }
+    .dot-gmu     { background: var(--gmu); }
+
+    .condition-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .cond-new  { background: #e8f5ee; color: #1e6e40; }
+    .cond-used { background: #fff3e0; color: #a05a00; }
+    .cond-rent { background: #e8f0fe; color: #1a56b0; }
+
+    .price-cell {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--green-dark);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .price-cell .shipping {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-hint);
+      display: block;
+    }
+
+    .btn-goto {
+      display: inline-block;
+      padding: 7px 16px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-goto:hover { background: var(--green-mid); }
+
+    .best-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: var(--gold-light);
+      color: var(--gold-hover);
+      border: 1px solid #e8d9a8;
+      margin-left: 6px;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* ── NECESSITY RATING ── */
+    .necessity-section {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* SVG donut chart */
+    .donut-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      flex-shrink: 0;
+    }
+
+    .donut-wrap svg {
+      transform: rotate(-90deg);
+    }
+
+    .donut-bg {
+      fill: none;
+      stroke: #e8e8e0;
+      stroke-width: 14;
+    }
+
+    .donut-fill {
+      fill: none;
+      stroke: var(--green-dark);
+      stroke-width: 14;
+      stroke-linecap: round;
+      stroke-dasharray: 283;
+      stroke-dashoffset: 85; /* 283 * (1 - 0.70) = 85 → 70% necessary */
+      transition: stroke-dashoffset 1s ease;
+    }
+
+    .donut-label {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .donut-pct {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--green-dark);
+      line-height: 1;
+    }
+
+    .donut-sub {
+      font-size: 10px;
+      color: var(--text-hint);
+      margin-top: 2px;
+    }
+
+    .necessity-info { flex: 1; }
+
+    .necessity-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .necessity-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .vote-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-vote {
+      padding: 7px 16px;
+      border-radius: 6px;
+      border: 1.5px solid var(--border);
+      background: var(--bg-input);
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--text-muted);
+    }
+
+    .btn-vote:hover { border-color: var(--green-dark); color: var(--green-dark); }
+    .btn-vote.voted-yes { background: var(--green-light); border-color: var(--green-dark); color: var(--green-dark); }
+    .btn-vote.voted-no  { background: #fef2f2; border-color: #e05252; color: #c03030; }
+
+    /* ── COMMENTS ── */
+    .comment-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .comment {
+      padding: 12px 14px;
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+
+    .comment-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .comment-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--green-dark);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .comment-meta { flex: 1; }
+
+    .comment-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .comment-course {
+      font-size: 11px;
+      color: var(--text-hint);
+    }
+
+    .comment-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .comment-helpful {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .btn-helpful {
+      font-size: 12px;
+      color: var(--text-hint);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3px 10px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+
+    .btn-helpful:hover { border-color: var(--green-dark); color: var(--green-dark); }
+
+    /* Add comment form */
+    .comment-form {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .comment-form select,
+    .comment-form textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-input);
+      color: var(--text-main);
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .comment-form select:focus,
+    .comment-form textarea:focus {
+      border-color: var(--green-dark);
+      box-shadow: 0 0 0 3px rgba(30,77,43,0.08);
+    }
+
+    .comment-form textarea { min-height: 80px; }
+
+    .btn-post {
+      align-self: flex-end;
+      padding: 9px 20px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-post:hover { background: var(--green-mid); }
+
+    /* ── SELL TAB ── */
+    .sell-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .sell-platform-card {
+      background: var(--bg-card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .sell-platform-card:hover {
+      border-color: var(--green-dark);
+      box-shadow: var(--shadow-md);
+    }
+
+    .sell-platform-card.recommended {
+      border-color: var(--gold);
+      box-shadow: 0 4px 20px rgba(200,164,74,0.15);
+    }
+
+    .recommended-tag {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+
+    .sell-platform-name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .sell-avg-price {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--green-dark);
+      margin-bottom: 4px;
+    }
+
+    .sell-listings {
+      font-size: 12px;
+      color: var(--text-hint);
+      margin-bottom: 12px;
+    }
+
+    .sell-listings strong {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .btn-sell-here {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      background: var(--green-dark);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.15s;
+    }
+
+    .btn-sell-here:hover { background: var(--green-mid); }
+
+    .sell-recommendation {
+      background: var(--gold-light);
+      border: 1px solid #e8d9a8;
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .sell-rec-icon { font-size: 24px; flex-shrink: 0; }
+
+    .sell-rec-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gold-hover);
+      margin-bottom: 4px;
+    }
+
+    .sell-rec-text {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .sell-grid { grid-template-columns: 1fr; }
+      .necessity-section { flex-direction: column; align-items: flex-start; }
+      .navbar-search { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar with inline search -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="navbar-logo">Mason<span>Saver</span></a>
+    <div class="navbar-search">
+      <input type="text" value="Computer Networks Tanenbaum" placeholder="Search textbooks..." />
+      <button>Search</button>
+    </div>
+    <a href="login.html" class="btn-signout">Sign out</a>
+  </nav>
+
+  <div class="page">
+
+    <!-- Book Header -->
+    <div class="book-header">
+      <div class="book-cover">📖</div>
+      <div class="book-info">
+        <h1 class="book-title">Computer Networks</h1>
+        <p class="book-author">Andrew S. Tanenbaum &amp; David J. Wetherall</p>
+        <div class="book-meta">
+          <span class="badge">6th Edition</span>
+          <span class="badge">ISBN 978-0-13-468599-1</span>
+          <span class="badge-gold badge">Pearson</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('buy', this)">🛒 Buy</button>
+      <button class="tab" onclick="switchTab('sell', this)">💰 Sell</button>
+    </div>
+
+    <!-- ── BUY TAB ── -->
+    <div class="tab-panel active" id="panel-buy">
+
+      <!-- Price Comparison Table -->
+      <div class="card">
+        <p class="card-title">Price Comparison</p>
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Condition</th>
+              <th>Shipping</th>
+              <th style="text-align:right">Total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <span class="source-pill">
+                  <span class="source-dot dot-chegg"></span> Chegg
+                </span>
+              </td>
+              <td><span class="condition-badge cond-rent">Rental</span></td>
+              <td style="color:var(--text-hint); font-size:13px">Free</td>
+              <td class="price-cell">
+                $29.99
+                <span class="shipping">semester rental</span>
+              </td>
+              <td style="text-align:right">
+                <a href="#" class="btn-goto">Go to Chegg</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="source-pill">
+                  <span class="source-dot dot-amazon"></span> Amazon
+                </span>
+              </td>
+              <td><span class="condition-badge cond-used">Used</span></td>
+              <td style="color:var(--text-hint); font-size:13px">+$3.99</td>
+              <td class="price-cell">
+                $41.99
+                <span class="shipping">incl. shipping</span>
+              </td>
+              <td style="text-align:right">
+                <a href="#" class="btn-goto">Go to Amazon</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="source-pill">
+                  <span class="source-dot dot-amazon"></span> Amazon
+                </span>
+              </td>
+              <td><span class="condition-badge cond-new">New</span></td>
+              <td style="color:var(--text-hint); font-size:13px">Free Prime</td>
+              <td class="price-cell">
+                $58.00
+                <span class="shipping">free shipping</span>
+              </td>
+              <td style="text-align:right">
+                <a href="#" class="btn-goto">Go to Amazon</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="source-pill">
+                  <span class="source-dot dot-chegg"></span> Chegg
+                </span>
+              </td>
+              <td><span class="condition-badge cond-new">New</span></td>
+              <td style="color:var(--text-hint); font-size:13px">+$4.99</td>
+              <td class="price-cell">
+                $89.99
+                <span class="shipping">incl. shipping</span>
+              </td>
+              <td style="text-align:right">
+                <a href="#" class="btn-goto">Go to Chegg</a>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span class="source-pill">
+                  <span class="source-dot dot-gmu"></span> GMU Bookstore
+                </span>
+              </td>
+              <td><span class="condition-badge cond-new">New</span></td>
+              <td style="color:var(--text-hint); font-size:13px">Pickup</td>
+              <td class="price-cell">
+                $112.00
+                <span class="shipping">campus pickup</span>
+              </td>
+              <td style="text-align:right">
+                <a href="#" class="btn-goto">Go to Bookstore</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Necessity Rating -->
+      <div class="card">
+        <p class="card-title">Is this book necessary?</p>
+        <div class="necessity-section">
+
+          <!-- Donut chart showing 70% necessary -->
+          <div class="donut-wrap">
+            <svg width="120" height="120" viewBox="0 0 100 100">
+              <circle class="donut-bg" cx="50" cy="50" r="45" />
+              <circle class="donut-fill" cx="50" cy="50" r="45" id="donutFill" />
+            </svg>
+            <div class="donut-label">
+              <span class="donut-pct" id="donutPct">70%</span>
+              <span class="donut-sub">say yes</span>
+            </div>
+          </div>
+
+          <div class="necessity-info">
+            <p class="necessity-title">Based on 47 student votes for CS 455</p>
+            <p class="necessity-desc">
+              Most students who took this course said the textbook was used regularly
+              for homework and exam prep. A few noted the professor posted slides,
+              but the book was still helpful for deeper understanding.
+            </p>
+            <div class="vote-row">
+              <button class="btn-vote" id="voteYes" onclick="vote('yes')">👍 Yes, needed it</button>
+              <button class="btn-vote" id="voteNo"  onclick="vote('no')">👎 Not really</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Student Comments -->
+      <div class="card">
+        <p class="card-title">Student Reviews — CS 455</p>
+
+        <div class="comment-list" id="commentList">
+
+          <div class="comment">
+            <div class="comment-header">
+              <div class="comment-avatar">MR</div>
+              <div class="comment-meta">
+                <p class="comment-name">Mason Student</p>
+                <p class="comment-course">CS 455 — Spring 2026</p>
+              </div>
+            </div>
+            <p class="comment-text">Professor Itani assigned readings from almost every chapter. I used it constantly for the homework problems. Definitely worth getting at least a rental.</p>
+            <div class="comment-helpful">
+              <button class="btn-helpful" onclick="helpful(this)">👍 Helpful (12)</button>
+            </div>
+          </div>
+
+          <div class="comment">
+            <div class="comment-header">
+              <div class="comment-avatar">AJ</div>
+              <div class="comment-meta">
+                <p class="comment-name">Mason Student</p>
+                <p class="comment-course">CS 455 — Fall 2025</p>
+              </div>
+            </div>
+            <p class="comment-text">You can get by with just the slides but the practice problems in the book are really helpful for exams. I'd rent it rather than skip it entirely.</p>
+            <div class="comment-helpful">
+              <button class="btn-helpful" onclick="helpful(this)">👍 Helpful (8)</button>
+            </div>
+          </div>
+
+          <div class="comment">
+            <div class="comment-header">
+              <div class="comment-avatar">GN</div>
+              <div class="comment-meta">
+                <p class="comment-name">Mason Student</p>
+                <p class="comment-course">CS 455 — Fall 2025</p>
+              </div>
+            </div>
+            <p class="comment-text">Honestly didn't open it much after midterms. The slides covered everything on the tests. But the first few chapters are solid for understanding the basics.</p>
+            <div class="comment-helpful">
+              <button class="btn-helpful" onclick="helpful(this)">👍 Helpful (5)</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Add comment form -->
+        <div class="comment-form">
+          <select id="courseSelect">
+            <option value="">Select your course section</option>
+            <option value="CS 455 - Spring 2026">CS 455 — Spring 2026</option>
+            <option value="CS 455 - Fall 2025">CS 455 — Fall 2025</option>
+            <option value="CS 321 - Summer 2026">CS 321 — Summer 2026</option>
+          </select>
+          <textarea id="commentInput" placeholder="Share your experience with this textbook in this course..."></textarea>
+          <button class="btn-post" onclick="postComment()">Post Review</button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ── SELL TAB ── -->
+    <div class="tab-panel" id="panel-sell">
+
+      <!-- Platform cards -->
+      <div class="sell-grid">
+
+        <div class="sell-platform-card recommended">
+          <span class="recommended-tag">⭐ Best Option</span>
+          <p class="sell-platform-name">
+            <span class="source-dot dot-chegg" style="width:12px;height:12px;"></span> Chegg
+          </p>
+          <p class="sell-avg-price">$34.00</p>
+          <p class="sell-listings"><strong>18 active listings</strong><br/>avg used price</p>
+          <a href="#" class="btn-sell-here">List on Chegg →</a>
+        </div>
+
+        <div class="sell-platform-card">
+          <p class="sell-platform-name">
+            <span class="source-dot dot-amazon" style="width:12px;height:12px;"></span> Amazon
+          </p>
+          <p class="sell-avg-price">$28.50</p>
+          <p class="sell-listings"><strong>6 active listings</strong><br/>avg used price</p>
+          <a href="#" class="btn-sell-here">List on Amazon →</a>
+        </div>
+
+        <div class="sell-platform-card">
+          <p class="sell-platform-name">
+            <span class="source-dot dot-gmu" style="width:12px;height:12px;"></span> GMU Buyback
+          </p>
+          <p class="sell-avg-price">$11.00</p>
+          <p class="sell-listings"><strong>Buyback program</strong><br/>fixed buyback price</p>
+          <a href="#" class="btn-sell-here">Go to Bookstore →</a>
+        </div>
+
+      </div>
+
+      <!-- Recommendation reasoning -->
+      <div class="sell-recommendation">
+        <span class="sell-rec-icon">💡</span>
+        <div>
+          <p class="sell-rec-title">We recommend listing on Chegg</p>
+          <p class="sell-rec-text">
+            Chegg has the most active used market for this title with 18 listings averaging $34.00,
+            giving you the best chance of a quick sale at a competitive price. Amazon has fewer
+            listings but a lower average, meaning less competition but also less buyer traffic.
+            The GMU buyback price of $11.00 is significantly below market value and should only
+            be used as a last resort.
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    /* ── TAB SWITCHING ── */
+    function switchTab(tabName, btn) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + tabName).classList.add('active');
+    }
+
+    /* ── DONUT CHART ANIMATION ── */
+    window.addEventListener('load', () => {
+      const fill = document.getElementById('donutFill');
+      const circumference = 2 * Math.PI * 45; /* 282.7 */
+      const pct = 0.70;
+      setTimeout(() => {
+        fill.style.strokeDashoffset = circumference * (1 - pct);
+      }, 300);
+    });
+
+    /* ── VOTING ── */
+    function vote(choice) {
+      const yesBtn = document.getElementById('voteYes');
+      const noBtn  = document.getElementById('voteNo');
+      yesBtn.classList.remove('voted-yes');
+      noBtn.classList.remove('voted-no');
+      if (choice === 'yes') yesBtn.classList.add('voted-yes');
+      else noBtn.classList.add('voted-no');
+      /* TODO: send vote to SpringBoot backend
+         fetch('/api/textbooks/{isbn}/vote', { method: 'POST', body: JSON.stringify({ vote: choice }) }) */
+    }
+
+    /* ── HELPFUL BUTTON ── */
+    function helpful(btn) {
+      const match = btn.textContent.match(/\((\d+)\)/);
+      if (match) {
+        const count = parseInt(match[1]) + 1;
+        btn.textContent = btn.textContent.replace(/\(\d+\)/, `(${count})`);
+      }
+      btn.style.borderColor = 'var(--green-dark)';
+      btn.style.color = 'var(--green-dark)';
+    }
+
+    /* ── POST COMMENT ── */
+    function postComment() {
+      const course = document.getElementById('courseSelect').value;
+      const text   = document.getElementById('commentInput').value.trim();
+      if (!course || !text) {
+        alert('Please select a course and write a comment before posting.');
+        return;
+      }
+
+      /* Build initials for avatar */
+      const initials = 'ME';
+
+      const comment = document.createElement('div');
+      comment.className = 'comment';
+      comment.style.animation = 'fadeUp 0.3s ease both';
+      comment.innerHTML = `
+        <div class="comment-header">
+          <div class="comment-avatar" style="background:var(--gold-hover)">${initials}</div>
+          <div class="comment-meta">
+            <p class="comment-name">You</p>
+            <p class="comment-course">${course}</p>
+          </div>
+        </div>
+        <p class="comment-text">${text}</p>
+        <div class="comment-helpful">
+          <button class="btn-helpful" onclick="helpful(this)">👍 Helpful (0)</button>
+        </div>
+      `;
+
+      document.getElementById('commentList').appendChild(comment);
+      document.getElementById('commentInput').value = '';
+      document.getElementById('courseSelect').value = '';
+
+      /* TODO: send comment to SpringBoot backend
+         fetch('/api/textbooks/{isbn}/comments', { method: 'POST', body: JSON.stringify({ course, text }) }) */
+    }
+  </script>
+
+</body>
+</html>

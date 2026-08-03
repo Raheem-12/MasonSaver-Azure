@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MasonSaver — Dashboard</title>
+
+  <!-- Google Fonts: Playfair Display for branding, DM Sans for UI text -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Reset: remove default browser margin, padding, and box model inconsistencies */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /*
+     * CSS Variables — same design tokens used in login and signup pages.
+     * Keeping these consistent ensures the whole site feels cohesive.
+     */
+    :root {
+      --green-dark: #1e4d2b;
+      --green-mid:  #2a6639;
+      --green-light: #eef4f0;
+      --gold:       #c8a44a;
+      --gold-hover: #b08f38;
+
+      --text-main:  #1a1a1a;
+      --text-muted: #777;
+      --text-hint:  #aaa;
+
+      --border:     #ddddd5;
+      --bg-page:    #f2f2ec;
+      --bg-card:    #ffffff;
+      --bg-input:   #fafaf8;
+    }
+
+    /* Base body styles */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background-color: var(--bg-page);
+      min-height: 100vh;
+      color: var(--text-main);
+    }
+
+    /* -------------------------
+     * NAVBAR
+     * Fixed top navigation bar with logo and sign out link.
+     * ------------------------- */
+    .navbar {
+      background-color: var(--green-dark);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100; /* Keeps navbar above page content when scrolling */
+    }
+
+    /* Logo in the navbar: "Mason" white, "Saver" gold */
+    .navbar-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    .navbar-logo span { color: var(--gold); }
+
+    /* Right side of navbar: contains the sign out button */
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    /* Sign out button in the navbar */
+    .btn-signout {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.75);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 6px;
+      padding: 6px 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.15s, color 0.15s;
+    }
+
+    .btn-signout:hover {
+      background-color: rgba(255,255,255,0.1);
+      color: #ffffff;
+    }
+
+    /* -------------------------
+     * HERO SECTION
+     * Welcome banner at the top of the page beneath the navbar.
+     * ------------------------- */
+    .hero {
+      background-color: var(--green-dark);
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+      /* Slight overlap trick: extra bottom padding lets the search card overlap */
+    }
+
+    /* Main welcome heading */
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    /* Gold accent on the username in the welcome message */
+    .hero-title span { color: var(--gold); }
+
+    /* Subtitle beneath the welcome heading */
+    .hero-subtitle {
+      font-size: 15px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 0;
+    }
+
+    /* -------------------------
+     * SEARCH CARD
+     * The main search interface, overlapping the hero section.
+     * ------------------------- */
+    .search-container {
+      max-width: 720px;
+      margin: -2rem auto 0; /* Negative top margin pulls it up over the hero */
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* White card wrapping the search bar and filters */
+    .search-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      animation: fadeUp 0.4s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Label above the search input */
+    .search-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /*
+     * Search input row: the text input and search button sit side by side.
+     * Uses flexbox so the button stays a fixed width and the input fills the rest.
+     */
+    .search-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    /* The main text input for ISBN or title search */
+    .search-input {
+      flex: 1; /* Takes up all available space next to the button */
+      padding: 11px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg-input);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    /* Focus state on the search input */
+    .search-input:focus {
+      border-color: var(--green-dark);
+      box-shadow: 0 0 0 3px rgba(30, 77, 43, 0.1);
+    }
+
+    /* The search submit button */
+    .btn-search {
+      padding: 11px 24px;
+      background-color: var(--green-dark);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      white-space: nowrap; /* Prevents the button text from wrapping */
+      transition: background-color 0.15s, transform 0.1s;
+    }
+
+    .btn-search:hover  { background-color: var(--green-mid); }
+    .btn-search:active { transform: scale(0.98); }
+
+    /* Helper text below the search bar */
+    .search-hint {
+      font-size: 12px;
+      color: var(--text-hint);
+      margin-top: 8px;
+    }
+
+    /* -------------------------
+     * MAIN CONTENT AREA
+     * Sits below the search card, holds results and future content.
+     * ------------------------- */
+    .main {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /*
+     * .empty-state: shown when no search has been performed yet.
+     * Centered placeholder text encouraging the user to search.
+     */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-hint);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 1rem;
+      opacity: 0.4;
+    }
+
+    .empty-state-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .empty-state-text {
+      font-size: 14px;
+      color: var(--text-hint);
+    }
+
+    /* -------------------------
+     * FOOTER
+     * Simple footer at the bottom of the page.
+     * ------------------------- */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 12px;
+      color: var(--text-hint);
+      border-top: 1px solid var(--border);
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar: sticky top bar with logo and sign out -->
+  <nav class="navbar">
+    <a href="dashboard.html" class="navbar-logo">Mason<span>Saver</span></a>
+    <div class="navbar-right">
+      <!-- Sign out: redirects back to login page -->
+      <a href="login.html" class="btn-signout">Sign out</a>
+    </div>
+  </nav>
+
+  <!-- Hero: welcome banner -->
+  <section class="hero">
+    <h1 class="hero-title">Welcome back</h1>
+    <p class="hero-subtitle">Search for your textbooks and compare prices instantly</p>
+  </section>
+
+  <!-- Search card: overlaps the hero section -->
+  <div class="search-container">
+    <div class="search-card">
+
+      <label class="search-label" for="searchInput">Search by title, course, or ISBN</label>
+
+      <div class="search-row">
+        <!-- Main search input -->
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="e.g. Computer Networks, INFS 303, or 978-0-13-468599-1"
+          autocomplete="off"
+        />
+        <!-- Search button -->
+        <button class="btn-search" id="searchBtn" onclick="handleSearch()">Search</button>
+      </div>
+
+      <p class="search-hint">Enter a book title, course number, or ISBN to compare prices across Amazon, Chegg, and the GMU bookstore.</p>
+
+    </div>
+  </div>
+
+  <!-- Main content: shows empty state until a search is performed -->
+  <main class="main" id="resultsArea">
+
+    <!-- Empty state: shown before any search -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-icon">📚</div>
+      <p class="empty-state-title">No search yet</p>
+      <p class="empty-state-text">Enter a title, course number, or ISBN above to see price comparisons.</p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    MasonSaver &mdash; George Mason University &mdash; Built for students, by students
+  </footer>
+
+  <script>
+    /**
+     * handleSearch()
+     *
+     * Fires when the user clicks the Search button.
+     * Reads the search input value and validates it is not empty.
+     * Results functionality will be wired up to the SpringBoot backend
+     * in a future sprint once the textbook search endpoint is built.
+     *
+     * TODO: replace the console.log with a fetch() call to the backend
+     * e.g. fetch(`/api/textbooks/search?query=${encodeURIComponent(query)}`)
+     */
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+
+      /* Do nothing if the search box is empty */
+      if (!query) {
+        document.getElementById('searchInput').focus();
+        return;
+      }
+
+      /* TODO: send query to SpringBoot search endpoint and display results */
+      console.log('Searching for:', query);
+    }
+
+    /*
+     * Allow pressing Enter in the search input to trigger the search,
+     * same as clicking the Search button.
+     */
+    document.getElementById('searchInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleSearch();
+    });
+  </script>
+
+</body>
+</html>
