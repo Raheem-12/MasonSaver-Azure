@@ -51,8 +51,8 @@ Expected response:
 </td>
 
 <td align="center">
-<b>Dashboard</b><br><br>
-<img src="https://github.com/user-attachments/assets/c79ee436-4d5c-4b86-a69f-6b07f311d49c" width="430">
+<b>Textbook Search (Demo)</b><br><br>
+<img src="https://github.com/user-attachments/assets/2daa3a84-3e99-413d-b130-150ecf98083e" width="430">
 </td>
 </tr>
 
@@ -60,8 +60,8 @@ Expected response:
 
 <tr>
 <td align="center">
-<b>Textbook Search (Demo)</b><br><br>
-<img src="https://github.com/user-attachments/assets/2daa3a84-3e99-413d-b130-150ecf98083e" width="430">
+<b>Dashboard</b><br><br>
+<img src="https://github.com/user-attachments/assets/c79ee436-4d5c-4b86-a69f-6b07f311d49c" width="430">
 </td>
 
 <td align="center">
