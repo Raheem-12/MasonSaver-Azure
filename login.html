@@ -332,7 +332,7 @@
       }
 
       /* All checks passed — send to SpringBoot backend */
-      fetch('http://localhost:8080/api/auth/login', {
+      fetch('https://masonsaver-backend-raheem-eqctbph9bycpfhf8.eastus2-01.azurewebsites.net/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: email, password: password })
