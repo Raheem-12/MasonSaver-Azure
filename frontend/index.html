@@ -1,363 +1,439 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MasonSaver — Dashboard</title>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-  <!-- Google Fonts: Playfair Display for branding, DM Sans for UI text -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <title>MasonSaver | Compare Textbook Prices</title>
+
+  <meta
+    name="description"
+    content="MasonSaver helps students compare textbook prices and find more affordable options."
+  >
 
   <style>
-    /* Reset: remove default browser margin, padding, and box model inconsistencies */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    /*
-     * CSS Variables — same design tokens used in login and signup pages.
-     * Keeping these consistent ensures the whole site feels cohesive.
-     */
-    :root {
-      --green-dark: #1e4d2b;
-      --green-mid:  #2a6639;
-      --green-light: #eef4f0;
-      --gold:       #c8a44a;
-      --gold-hover: #b08f38;
-
-      --text-main:  #1a1a1a;
-      --text-muted: #777;
-      --text-hint:  #aaa;
-
-      --border:     #ddddd5;
-      --bg-page:    #f2f2ec;
-      --bg-card:    #ffffff;
-      --bg-input:   #fafaf8;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Base body styles */
     body {
-      font-family: 'DM Sans', sans-serif;
-      background-color: var(--bg-page);
       min-height: 100vh;
-      color: var(--text-main);
+      font-family: Arial, Helvetica, sans-serif;
+      color: #173f29;
+      background:
+        radial-gradient(circle at top right, rgba(224, 165, 59, 0.18), transparent 35%),
+        linear-gradient(135deg, #f7f5ed 0%, #eef4ed 100%);
     }
 
-    /* -------------------------
-     * NAVBAR
-     * Fixed top navigation bar with logo and sign out link.
-     * ------------------------- */
-    .navbar {
-      background-color: var(--green-dark);
-      padding: 0 2rem;
-      height: 60px;
+    a {
+      text-decoration: none;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      width: min(1180px, 92%);
+      margin: 0 auto;
+      padding: 24px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100; /* Keeps navbar above page content when scrolling */
+      gap: 24px;
     }
 
-    /* Logo in the navbar: "Mason" white, "Saver" gold */
-    .navbar-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      font-weight: 600;
-      color: #ffffff;
-      text-decoration: none;
-      letter-spacing: -0.5px;
+    .logo {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #174f2d;
     }
 
-    .navbar-logo span { color: var(--gold); }
+    .logo span {
+      color: #d89a27;
+    }
 
-    /* Right side of navbar: contains the sign out button */
-    .navbar-right {
+    .nav-actions {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 12px;
     }
 
-    /* Sign out button in the navbar */
-    .btn-signout {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 13px;
-      color: rgba(255,255,255,0.75);
-      background: none;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 6px;
-      padding: 6px 14px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 0.15s, color 0.15s;
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 24px;
+      border: 1px solid #1f5a36;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        color 0.2s ease;
     }
 
-    .btn-signout:hover {
-      background-color: rgba(255,255,255,0.1);
-      color: #ffffff;
+    .btn:hover {
+      transform: translateY(-2px);
     }
 
-    /* -------------------------
-     * HERO SECTION
-     * Welcome banner at the top of the page beneath the navbar.
-     * ------------------------- */
-    .hero {
-      background-color: var(--green-dark);
-      padding: 3rem 2rem 4rem;
-      text-align: center;
-      /* Slight overlap trick: extra bottom padding lets the search card overlap */
+    .btn-outline {
+      color: #1f5a36;
+      background: transparent;
     }
 
-    /* Main welcome heading */
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 32px;
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 8px;
+    .btn-outline:hover {
+      color: white;
+      background: #1f5a36;
     }
 
-    /* Gold accent on the username in the welcome message */
-    .hero-title span { color: var(--gold); }
-
-    /* Subtitle beneath the welcome heading */
-    .hero-subtitle {
-      font-size: 15px;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 0;
+    .btn-primary {
+      color: white;
+      background: #1f5a36;
+      box-shadow: 0 12px 28px rgba(31, 90, 54, 0.18);
     }
 
-    /* -------------------------
-     * SEARCH CARD
-     * The main search interface, overlapping the hero section.
-     * ------------------------- */
-    .search-container {
+    .btn-primary:hover {
+      background: #174727;
+    }
+
+    main {
+      width: min(1180px, 92%);
+      flex: 1;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: center;
+      gap: 64px;
+      padding: 60px 0 90px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: #174f2d;
+      background: rgba(31, 90, 54, 0.1);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1 {
       max-width: 720px;
-      margin: -2rem auto 0; /* Negative top margin pulls it up over the hero */
-      padding: 0 1.5rem;
-      position: relative;
-      z-index: 10;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 7vw, 5.6rem);
+      line-height: 0.98;
+      color: #174f2d;
     }
 
-    /* White card wrapping the search bar and filters */
-    .search-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.75rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      animation: fadeUp 0.4s ease both;
+    h1 span {
+      color: #d89a27;
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .hero-copy {
+      max-width: 650px;
+      margin-top: 24px;
+      color: #52645a;
+      font-size: 1.2rem;
+      line-height: 1.7;
     }
 
-    /* Label above the search input */
-    .search-label {
-      display: block;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    /*
-     * Search input row: the text input and search button sit side by side.
-     * Uses flexbox so the button stays a fixed width and the input fills the rest.
-     */
-    .search-row {
+    .hero-actions {
+      margin-top: 34px;
       display: flex;
-      gap: 10px;
+      flex-wrap: wrap;
+      gap: 14px;
     }
 
-    /* The main text input for ISBN or title search */
-    .search-input {
-      flex: 1; /* Takes up all available space next to the button */
-      padding: 11px 16px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 15px;
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg-input);
-      color: var(--text-main);
-      outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
+    .features {
+      margin-top: 42px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
     }
 
-    /* Focus state on the search input */
-    .search-input:focus {
-      border-color: var(--green-dark);
-      box-shadow: 0 0 0 3px rgba(30, 77, 43, 0.1);
+    .feature {
+      padding: 18px;
+      border: 1px solid rgba(23, 79, 45, 0.12);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.55);
     }
 
-    /* The search submit button */
-    .btn-search {
-      padding: 11px 24px;
-      background-color: var(--green-dark);
-      color: #ffffff;
-      border: none;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: 500;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      white-space: nowrap; /* Prevents the button text from wrapping */
-      transition: background-color 0.15s, transform 0.1s;
-    }
-
-    .btn-search:hover  { background-color: var(--green-mid); }
-    .btn-search:active { transform: scale(0.98); }
-
-    /* Helper text below the search bar */
-    .search-hint {
-      font-size: 12px;
-      color: var(--text-hint);
-      margin-top: 8px;
-    }
-
-    /* -------------------------
-     * MAIN CONTENT AREA
-     * Sits below the search card, holds results and future content.
-     * ------------------------- */
-    .main {
-      max-width: 720px;
-      margin: 2rem auto;
-      padding: 0 1.5rem;
-    }
-
-    /*
-     * .empty-state: shown when no search has been performed yet.
-     * Centered placeholder text encouraging the user to search.
-     */
-    .empty-state {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: var(--text-hint);
-    }
-
-    .empty-state-icon {
-      font-size: 48px;
-      margin-bottom: 1rem;
-      opacity: 0.4;
-    }
-
-    .empty-state-title {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text-muted);
+    .feature strong {
+      display: block;
       margin-bottom: 6px;
+      color: #174f2d;
     }
 
-    .empty-state-text {
-      font-size: 14px;
-      color: var(--text-hint);
+    .feature p {
+      color: #6d776f;
+      font-size: 0.92rem;
+      line-height: 1.5;
     }
 
-    /* -------------------------
-     * FOOTER
-     * Simple footer at the bottom of the page.
-     * ------------------------- */
-    .footer {
+    .visual-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 510px;
+      padding: 34px;
+      border-radius: 28px;
+      color: white;
+      background: #194f2e;
+      box-shadow: 0 30px 70px rgba(23, 79, 45, 0.24);
+    }
+
+    .visual-card::before,
+    .visual-card::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .visual-card::before {
+      width: 260px;
+      height: 260px;
+      top: -80px;
+      right: -70px;
+      background: rgba(216, 154, 39, 0.25);
+    }
+
+    .visual-card::after {
+      width: 220px;
+      height: 220px;
+      bottom: -90px;
+      left: -80px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .visual-content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .visual-label {
+      font-weight: 700;
+      color: #f3cf83;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .visual-title {
+      margin-top: 16px;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.6rem;
+      line-height: 1.1;
+    }
+
+    .search-preview {
+      margin-top: 42px;
+      padding: 18px;
+      border-radius: 18px;
+      background: white;
+      color: #1d3f2b;
+    }
+
+    .search-preview label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #66726a;
+    }
+
+    .fake-input {
+      padding: 16px;
+      border: 1px solid #dfe5df;
+      border-radius: 10px;
+      color: #929a94;
+      background: #f8faf8;
+    }
+
+    .price-list {
+      margin-top: 22px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .price-row span {
+      color: #d7e3da;
+    }
+
+    .price-row strong {
+      color: #f3cf83;
+    }
+
+    footer {
+      width: min(1180px, 92%);
+      margin: 0 auto;
+      padding: 22px 0 30px;
+      color: #748078;
+      font-size: 0.9rem;
       text-align: center;
-      padding: 2rem;
-      font-size: 12px;
-      color: var(--text-hint);
-      border-top: 1px solid var(--border);
-      margin-top: 4rem;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .visual-card {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav-actions {
+        width: 100%;
+      }
+
+      .nav-actions .btn {
+        flex: 1;
+      }
+
+      main {
+        padding-top: 34px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
+  <div class="page">
 
-  <!-- Navbar: sticky top bar with logo and sign out -->
-  <nav class="navbar">
-    <a href="dashboard.html" class="navbar-logo">Mason<span>Saver</span></a>
-    <div class="navbar-right">
-      <!-- Sign out: redirects back to login page -->
-      <a href="login.html" class="btn-signout">Sign out</a>
-    </div>
-  </nav>
+    <header>
+      <a href="index.html" class="logo">
+        Mason<span>Saver</span>
+      </a>
 
-  <!-- Hero: welcome banner -->
-  <section class="hero">
-    <h1 class="hero-title">Welcome back</h1>
-    <p class="hero-subtitle">Search for your textbooks and compare prices instantly</p>
-  </section>
+      <nav class="nav-actions" aria-label="Authentication">
+        <a href="login.html" class="btn btn-outline">Log In</a>
+        <a href="signup.html" class="btn btn-primary">Create Account</a>
+      </nav>
+    </header>
 
-  <!-- Search card: overlaps the hero section -->
-  <div class="search-container">
-    <div class="search-card">
+    <main>
+      <section>
+        <p class="eyebrow">Built for Mason students</p>
 
-      <label class="search-label" for="searchInput">Search by title, course, or ISBN</label>
+        <h1>
+          Spend less on the books you <span>need.</span>
+        </h1>
 
-      <div class="search-row">
-        <!-- Main search input -->
-        <input
-          type="text"
-          id="searchInput"
-          class="search-input"
-          placeholder="e.g. Computer Networks, INFS 303, or 978-0-13-468599-1"
-          autocomplete="off"
-        />
-        <!-- Search button -->
-        <button class="btn-search" id="searchBtn" onclick="handleSearch()">Search</button>
-      </div>
+        <p class="hero-copy">
+          MasonSaver helps students search for textbooks, compare available
+          options, and avoid overpaying for course materials.
+        </p>
 
-      <p class="search-hint">Enter a book title, course number, or ISBN to compare prices across Amazon, Chegg, and the GMU bookstore.</p>
+        <div class="hero-actions">
+          <a href="signup.html" class="btn btn-primary">
+            Start Saving
+          </a>
 
-    </div>
+          <a href="login.html" class="btn btn-outline">
+            I Already Have an Account
+          </a>
+        </div>
+
+        <div class="features">
+          <article class="feature">
+            <strong>Search quickly</strong>
+            <p>Find books by title, course, or ISBN.</p>
+          </article>
+
+          <article class="feature">
+            <strong>Compare options</strong>
+            <p>Review textbook listings in one place.</p>
+          </article>
+
+          <article class="feature">
+            <strong>Save money</strong>
+            <p>Choose the option that works for your budget.</p>
+          </article>
+        </div>
+      </section>
+
+      <aside class="visual-card" aria-label="MasonSaver preview">
+        <div class="visual-content">
+          <p class="visual-label">Textbook search</p>
+
+          <h2 class="visual-title">
+            Compare before you buy.
+          </h2>
+
+          <div class="search-preview">
+            <label>Search by title, course, or ISBN</label>
+
+            <div class="fake-input">
+              Computer Networks
+            </div>
+          </div>
+
+          <div class="price-list">
+            <div class="price-row">
+              <span>Used textbook</span>
+              <strong>$28.99</strong>
+            </div>
+
+            <div class="price-row">
+              <span>Rental option</span>
+              <strong>$34.50</strong>
+            </div>
+
+            <div class="price-row">
+              <span>New textbook</span>
+              <strong>$79.95</strong>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      MasonSaver — Cloud-deployed with Microsoft Azure
+    </footer>
+
   </div>
-
-  <!-- Main content: shows empty state until a search is performed -->
-  <main class="main" id="resultsArea">
-
-    <!-- Empty state: shown before any search -->
-    <div class="empty-state" id="emptyState">
-      <div class="empty-state-icon">📚</div>
-      <p class="empty-state-title">No search yet</p>
-      <p class="empty-state-text">Enter a title, course number, or ISBN above to see price comparisons.</p>
-    </div>
-
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    MasonSaver &mdash; George Mason University &mdash; Built for students, by students
-  </footer>
-
-  <script>
-    /**
-     * handleSearch()
-     *
-     * Fires when the user clicks the Search button.
-     * Reads the search input value and validates it is not empty.
-     * Results functionality will be wired up to the SpringBoot backend
-     * in a future sprint once the textbook search endpoint is built.
-     *
-     * TODO: replace the console.log with a fetch() call to the backend
-     * e.g. fetch(`/api/textbooks/search?query=${encodeURIComponent(query)}`)
-     */
-    function handleSearch() {
-      const query = document.getElementById('searchInput').value.trim();
-
-      /* Do nothing if the search box is empty */
-      if (!query) {
-        document.getElementById('searchInput').focus();
-        return;
-      }
-
-      /* TODO: send query to SpringBoot search endpoint and display results */
-      console.log('Searching for:', query);
-    }
-
-    /*
-     * Allow pressing Enter in the search input to trigger the search,
-     * same as clicking the Search button.
-     */
-    document.getElementById('searchInput').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') handleSearch();
-    });
-  </script>
-
 </body>
 </html>
