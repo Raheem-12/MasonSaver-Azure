@@ -54,3 +54,6 @@ build/
 ### Operating system files ###
 Thumbs.db
 .DS_Store
+
+# frontend backup
+frontend-backup/
