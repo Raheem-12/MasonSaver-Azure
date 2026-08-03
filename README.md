@@ -1,14 +1,17 @@
 # MasonSaver
 
 A cloud-deployed full-stack textbook price comparison platform built with Spring Boot, PostgreSQL, and Microsoft Azure.
-A full-stack textbook price comparison application built with Java Spring Boot, PostgreSQL, and Microsoft Azure.
 
-MasonSaver helps George Mason University students compare textbook prices before purchasing. The project includes user authentication, a Spring Boot REST API, a PostgreSQL database, Azure deployment, and GitHub Actions CI/CD.
 MasonSaver helps George Mason University students compare textbook prices before purchasing. The application includes secure user authentication, a REST API, a PostgreSQL database, Azure cloud deployment, and automated CI/CD using GitHub Actions.
 
 ---
 
-@@ -15,3 +15,219 @@ https://nice-sky-082512f0f.7.azurestaticapps.net
+## Live Demo
+
+### Frontend
+
+https://nice-sky-082512f0f.7.azurestaticapps.net
+
 ### Backend API
 
 https://masonsaver-backend-raheem-eqctbph9bycpfhf8.eastus2-01.azurewebsites.net/api/health
@@ -62,45 +65,50 @@ Expected response:
 </td>
 
 <td align="center">
-<b>GitHub Actions CI/CD</b><br><br>
-<img src="https://github.com/user-attachments/assets/40d52e2f-720e-4c4a-b6f7-f7c9dd889233" width="430">
+<b>Frontend Deployment Pipeline</b><br><br>
+<img src="https://github.com/user-attachments/assets/2830137f-c449-4086-a87c-cfb9c288df3f" width="430">
 </td>
 </tr>
-</table>
 
-**Note:** The textbook search page currently displays sample pricing data. Live results will be added after eBay Browse API access is approved.
+<tr><td height="25"></td></tr>
 
----
-
-## Azure Deployment
-
-<table>
 <tr>
 <td align="center">
-<b>Azure Static Web App</b><br><br>
-<img src="https://github.com/user-attachments/assets/b3572ade-449c-443b-ac14-cb1aad6f2959" width="420">
+<b>Backend Deployment Pipeline</b><br><br>
+<img src="https://github.com/user-attachments/assets/2d97e951-cb13-4855-a90a-ae9961b5823b" width="430">
 </td>
 
 <td align="center">
 <b>Azure App Service</b><br><br>
-<img src="https://github.com/user-attachments/assets/278c3b39-6335-4395-a42f-67a5288044c0" width="420">
+<img src="https://github.com/user-attachments/assets/278c3b39-6335-4395-a42f-67a5288044c0" width="430">
+</td>
+</tr>
+
+<tr><td height="25"></td></tr>
+
+<tr>
+<td align="center" colspan="2">
+<b>Azure Static Web App</b><br><br>
+<img src="https://github.com/user-attachments/assets/b3572ade-449c-443b-ac14-cb1aad6f2959" width="430">
 </td>
 </tr>
 </table>
+
+**Note:** The textbook search page currently displays sample pricing data. Live results will be available after eBay Browse API access is approved.
 
 ---
 
 ## Features
 
+- Responsive web interface
 - User registration
-- User authentication
+- Secure user authentication
 - BCrypt password hashing
 - Spring Boot REST API
-- PostgreSQL database
+- PostgreSQL database integration
 - Azure Static Web Apps deployment
 - Azure App Service deployment
-- GitHub Actions CI/CD
-- Responsive frontend
+- Automated GitHub Actions CI/CD
 
 ---
 
@@ -109,7 +117,7 @@ Expected response:
 | Category | Technologies |
 |----------|--------------|
 | Frontend | HTML, CSS, JavaScript |
-| Backend | Java, Spring Boot, Spring Data JPA |
+| Backend | Java, Spring Boot |
 | Database | PostgreSQL |
 | Cloud | Azure Static Web Apps, Azure App Service |
 | DevOps | Git, GitHub, GitHub Actions, Maven |
@@ -148,7 +156,7 @@ Login
 Dashboard
 ```
 
-Passwords are hashed with BCrypt before being stored in PostgreSQL.
+Passwords are hashed using BCrypt before being stored in PostgreSQL.
 
 ---
 
@@ -178,12 +186,12 @@ GET /api/health
 
 ### Completed
 
-- Azure deployment
+- Full-stack Azure deployment
 - Spring Boot backend
 - PostgreSQL integration
-- User authentication
+- Secure user authentication
 - BCrypt password hashing
-- GitHub Actions CI/CD
+- Automated GitHub Actions CI/CD
 - Responsive frontend
 
 ### In Progress
@@ -199,12 +207,12 @@ GET /api/health
 
 ## Skills Demonstrated
 
+- Microsoft Azure
+- Cloud Deployment
 - Java
 - Spring Boot
 - REST API Development
 - PostgreSQL
-- Microsoft Azure
-- Cloud Deployment
 - Authentication
 - BCrypt Password Hashing
 - GitHub Actions
@@ -221,7 +229,7 @@ GET /api/health
 Computer Science Student  
 George Mason University
 
-Interested in Cloud Engineering, Backend Development, DevOps, and Microsoft Azure.
+Interested in Cloud Engineering, DevOps, Backend Development, and Infrastructure Automation.
 
 ---
 
