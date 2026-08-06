@@ -1,8 +1,8 @@
 # MasonSaver
 
-A cloud-deployed full-stack textbook price comparison platform built with Spring Boot, PostgreSQL, and Microsoft Azure.
+A cloud-deployed full-stack textbook price comparison platform built with Spring Boot, PostgreSQL, Docker, PostgreSQL, and Microsoft Azure.
 
-MasonSaver helps George Mason University students compare textbook prices before purchasing. The application includes secure user authentication, a REST API, a PostgreSQL database, Azure cloud deployment, and automated CI/CD using GitHub Actions.
+MasonSaver helps George Mason University students compare textbook prices before purchasing. The application includes secure user authentication, a REST API, a PostgreSQL database, Docker containerization, Azure cloud deployment, and automated CI/CD using GitHub Actions.
 
 ---
 
@@ -126,7 +126,7 @@ Expected response:
 | Backend | Java, Spring Boot |
 | Database | PostgreSQL |
 | Cloud | Azure Static Web Apps, Azure App Service |
-| DevOps | Git, GitHub, GitHub Actions, Maven |
+| DevOps | Docker, Git, GitHub, GitHub Actions, Maven |
 
 ---
 
@@ -139,6 +139,12 @@ Browser
 Azure Static Web Apps
     │
     ▼
+Azure App Service
+    │
+    ▼
+Docker Container
+    │
+    ▼
 Spring Boot REST API
     │
     ▼
@@ -146,6 +152,31 @@ PostgreSQL Database
 ```
 
 ---
+
+## Docker
+
+The Spring Boot backend is containerized using a multi-stage Docker build.
+
+### Build
+
+```bash
+cd masonsaver
+docker build -t masonsaver-backend .
+```
+
+### Run
+
+```bash
+docker run --rm -p 8080:8080 masonsaver-backend
+```
+
+The backend will be available at:
+
+```
+http://localhost:8080
+```
+
+The multi-stage Dockerfile compiles the application with Maven inside Docker and packages only the executable JAR into a lightweight Java runtime image.
 
 ## Authentication Flow
 
@@ -215,6 +246,7 @@ GET /api/health
 
 - Microsoft Azure
 - Cloud Deployment
+- Docker
 - Java
 - Spring Boot
 - REST API Development
