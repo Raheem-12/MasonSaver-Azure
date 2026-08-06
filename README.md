@@ -267,7 +267,7 @@ GET /api/health
 Computer Science Student  
 George Mason University
 
-Interested in Cloud Engineering, DevOps, Backend Development, and Infrastructure Automation.
+Interested in Cloud Engineering, Azure Infrastructure, DevOps, and Infrastructure Automation.
 
 ---
 
