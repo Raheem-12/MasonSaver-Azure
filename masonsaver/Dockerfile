@@ -3,23 +3,23 @@ FROM maven:3.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copy Maven configuration first for dependency caching
+# Copy the Maven configuration first so dependencies can be cached
 COPY pom.xml .
 
 RUN mvn dependency:go-offline -B
 
-# Copy source code and build the application
+#Copy the source code
 COPY src ./src
 
+#Compile and package the application
 RUN mvn clean package -DskipTests
 
-
-# Stage 2: Run the packaged application
+# Stage 2: Run the application in a smaller Java runtime image
 FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /app/target*.jar app.jar
 
 EXPOSE 8080
 
