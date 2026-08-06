@@ -8,10 +8,10 @@ COPY pom.xml .
 
 RUN mvn dependency:go-offline -B
 
-#Copy the source code
+# Copy the source code
 COPY src ./src
 
-#Compile and package the application
+# Compile and package the application
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application in a smaller Java runtime image
@@ -19,7 +19,7 @@ FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-COPY --from=build /app/target*.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
