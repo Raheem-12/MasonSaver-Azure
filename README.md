@@ -164,6 +164,29 @@ cd masonsaver
 docker build -t masonsaver-backend .
 ```
 
+---
+
+## Running with Docker Compose
+
+Start the application:
+
+```bash
+docker compose up --build
+```
+
+Stop the application:
+
+```bash
+docker compose down
+```
+
+This starts:
+
+- Spring Boot backend
+- PostgreSQL database
+
+The PostgreSQL data is stored in a Docker volume, so database contents persist across container restarts.
+
 ### Run
 
 ```bash
@@ -177,6 +200,8 @@ http://localhost:8080
 ```
 
 The multi-stage Dockerfile compiles the application with Maven inside Docker and packages only the executable JAR into a lightweight Java runtime image.
+
+---
 
 ## Authentication Flow
 
