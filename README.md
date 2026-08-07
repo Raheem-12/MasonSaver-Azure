@@ -1,6 +1,6 @@
 # MasonSaver
 
-A cloud-deployed full-stack textbook price comparison platform built with Spring Boot, PostgreSQL, Docker, PostgreSQL, and Microsoft Azure.
+A cloud-deployed full-stack textbook price comparison platform built with Spring Boot, PostgreSQL, Docker, and Microsoft Azure.
 
 MasonSaver helps George Mason University students compare textbook prices before purchasing. The application includes secure user authentication, a REST API, a PostgreSQL database, Docker containerization, Azure cloud deployment, and automated CI/CD using GitHub Actions.
 
@@ -115,6 +115,9 @@ Expected response:
 - Azure Static Web Apps deployment
 - Azure App Service deployment
 - Automated GitHub Actions CI/CD
+- Multi-stage Docker containerization
+- Docker Compose orchestration
+- PostgreSQL persistent storage using Docker volumes
 
 ---
 
@@ -157,37 +160,16 @@ PostgreSQL Database
 
 The Spring Boot backend is containerized using a multi-stage Docker build.
 
-### Build
+The first stage builds the application with Maven, while the final stage runs only the packaged JAR in a lightweight Java runtime image.
+
+### Build the Backend Image
 
 ```bash
 cd masonsaver
 docker build -t masonsaver-backend .
 ```
 
----
-
-## Running with Docker Compose
-
-Start the application:
-
-```bash
-docker compose up --build
-```
-
-Stop the application:
-
-```bash
-docker compose down
-```
-
-This starts:
-
-- Spring Boot backend
-- PostgreSQL database
-
-The PostgreSQL data is stored in a Docker volume, so database contents persist across container restarts.
-
-### Run
+### Run the Backend Container
 
 ```bash
 docker run --rm -p 8080:8080 masonsaver-backend
@@ -195,11 +177,38 @@ docker run --rm -p 8080:8080 masonsaver-backend
 
 The backend will be available at:
 
-```
+```text
 http://localhost:8080
 ```
 
-The multi-stage Dockerfile compiles the application with Maven inside Docker and packages only the executable JAR into a lightweight Java runtime image.
+---
+
+## Running with Docker Compose
+
+Docker Compose runs the Spring Boot backend and PostgreSQL database together.
+
+From the repository root:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+
+- Spring Boot backend
+- PostgreSQL 16 database
+- A shared Docker network for container communication
+- A persistent Docker volume for PostgreSQL data
+
+The backend connects to PostgreSQL using the Compose service name `postgres` rather than `localhost`.
+
+To stop the application:
+
+```bash
+docker compose down
+```
+
+PostgreSQL data persists across container recreation because it is stored in a Docker volume.
 
 ---
 
@@ -270,18 +279,21 @@ GET /api/health
 ## Skills Demonstrated
 
 - Microsoft Azure
-- Cloud Deployment
-- Docker
+- Cloud Application Deployment
+- Azure App Service
+- Azure Static Web Apps
+- Docker Containerization
+- Docker Compose
+- Multi-stage Docker Builds
+- Docker Networking
+- Docker Volumes
+- GitHub Actions CI/CD
+- Git
 - Java
 - Spring Boot
-- REST API Development
 - PostgreSQL
-- Authentication
-- BCrypt Password Hashing
-- GitHub Actions
-- CI/CD
-- Git
-- Full-Stack Development
+- REST API Integration
+- Secure Authentication (BCrypt)
 
 ---
 
